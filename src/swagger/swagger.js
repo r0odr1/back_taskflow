@@ -60,5 +60,50 @@ export const swaggerDocument = {
         },
       },
     },
+
+    '/api/auth/register': {
+      post: {
+        tags: ['Autenticación'],
+        summary: 'Registrar un usuario',
+        description: 'Crea una cuenta con el rol USER.',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['nombre', 'email', 'password'],
+                properties: {
+                  nombre: {
+                    type: 'string',
+                    maxLength: 100,
+                    example: 'Usuario Prueba',
+                  },
+                  email: {
+                    type: 'string',
+                    format: 'email',
+                    maxLength: 150,
+                    example: 'usuario@taskflow.com',
+                  },
+                  password: {
+                    type: 'string',
+                    format: 'password',
+                    minLength: 8,
+                    maxLength: 72,
+                    example: 'PruebaSegura123!',
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          201: {description: 'Usuario registrado correctamente.', },
+          400: {description: 'Datos de registro inválidos.', },
+          409: {description: 'Correo electrónico ya registrado.', },
+          500: {description: 'Error interno del servidor.', },
+        },
+      },
+    },
   },
 };

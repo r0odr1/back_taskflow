@@ -6,6 +6,7 @@ import swaggerUi from 'swagger-ui-express';
 import { pool } from './config/db.js';
 import { httpLogger } from './middlewares/httpLogger.js';
 import { swaggerDocument } from './swagger/swagger.js';
+import authRoutes from './routes/authRoutes.js';
 
 //Instancia principal de la aplicación Express.
 const app = express();
@@ -18,6 +19,9 @@ app.use(cors({origin: process.env.CLIENT_URL, }));
 
 //Habilita el procesamiento de solicitudes JSON.
 app.use(express.json());
+
+// Agrupa los endpoints de autenticación.
+app.use('/api/auth', authRoutes);
 
 /**
  * GET /api/health
