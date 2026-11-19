@@ -1,5 +1,5 @@
-
-import { registerUser } from '../services/authService.js';
+import bcrypt from 'bcryptjs';
+import { registerUser, loginUser } from '../services/authService.js';
 
 /**
  * Valida la solicitud y registra un nuevo usuario.
@@ -40,7 +40,7 @@ export const register = async (req, res) => {
     }
 
     // Valida la longitud de la contraseña.
-    if (password.length < 8 || password.length > 72) {
+    if (password.length < 8 || bcrypt.truncates(password)) {
       return res.status(400).json({
         success: false,
         message: 'La contraseña debe tener minimo 8 caracteres.',
@@ -73,6 +73,55 @@ export const register = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'No se pudo registrar el usuario.',
+    });
+  }
+};
+
+/**
+ * Autentica un usuario registrado.
+ *
+ * @route POST /api/auth/login
+ */
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body ?? {};
+
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Correo y contraseña son obligatorios.',
+      });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!cleanEmail || cleanEmail.length > 150 || !password || bcrypt.truncates(password)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Credenciales inválidas.',
+      });
+    }
+
+    const result = await loginUser(cleanEmail, password);
+
+    if (!result) {
+      return res.status(401).json({
+        success: false,
+        message: 'Correo o contraseña incorrectos.',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Inicio de sesión exitoso.',
+      data: result,
+    });
+  } catch (error) {
+    console.error('Error al iniciar sesión:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'No se pudo iniciar sesión.',
     });
   }
 };

@@ -32,6 +32,7 @@ npm run dev
 - `GET /api/health` - Estado del servidor y base de datos.
 - `GET /api/docs` - Documentación Swagger.
 - `POST /api/auth/register` - Registra un usuario nuevo.
+- `POST /api/auth/login` - Inicia sesión y genera un JWT.
 
 ## Base de datos
 

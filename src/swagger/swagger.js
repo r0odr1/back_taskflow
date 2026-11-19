@@ -105,5 +105,41 @@ export const swaggerDocument = {
         },
       },
     },
+
+    '/api/auth/login': {
+      post: {
+        tags: ['Autenticación'],
+        summary: 'Iniciar sesión con JWT',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['email', 'password'],
+                properties: {
+                  email: {
+                    type: 'string',
+                    format: 'email',
+                    example: 'usuario@taskflow.com',
+                  },
+                  password: {
+                    type: 'string',
+                    format: 'password',
+                    example: 'PruebaSegura123!',
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Inicio de sesión exitoso.' },
+          400: { description: 'Credenciales inválidas.' },
+          401: { description: 'Correo o contraseña incorrectos.' },
+          500: { description: 'Error interno del servidor.' },
+        },
+      },
+    },
   },
 };
