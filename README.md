@@ -34,6 +34,7 @@ npm run dev
 - `POST /api/auth/register` - Registra un usuario nuevo.
 - `POST /api/auth/login` - Inicia sesión y genera un JWT.
 - `GET /api/auth/me` - Consulta el perfil del usuario autenticado.
+- `POST /api/proyectos` - Crea proyectos del usuario autenticado.
 
 ## Base de datos
 

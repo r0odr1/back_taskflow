@@ -73,6 +73,42 @@ export const swaggerDocument = {
       },
     },
 
+    '/api/auth/login': {
+      post: {
+        tags: ['Autenticación'],
+        summary: 'Iniciar sesión con JWT',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['email', 'password'],
+                properties: {
+                  email: {
+                    type: 'string',
+                    format: 'email',
+                    example: 'usuario@taskflow.com',
+                  },
+                  password: {
+                    type: 'string',
+                    format: 'password',
+                    example: 'PruebaSegura123!',
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Inicio de sesión exitoso.' },
+          400: { description: 'Credenciales inválidas.' },
+          401: { description: 'Correo o contraseña incorrectos.' },
+          500: { description: 'Error interno del servidor.' },
+        },
+      },
+    },
+
     '/api/auth/register': {
       post: {
         tags: ['Autenticación'],
@@ -118,42 +154,6 @@ export const swaggerDocument = {
       },
     },
 
-    '/api/auth/login': {
-      post: {
-        tags: ['Autenticación'],
-        summary: 'Iniciar sesión con JWT',
-        requestBody: {
-          required: true,
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                required: ['email', 'password'],
-                properties: {
-                  email: {
-                    type: 'string',
-                    format: 'email',
-                    example: 'usuario@taskflow.com',
-                  },
-                  password: {
-                    type: 'string',
-                    format: 'password',
-                    example: 'PruebaSegura123!',
-                  },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          200: { description: 'Inicio de sesión exitoso.' },
-          400: { description: 'Credenciales inválidas.' },
-          401: { description: 'Correo o contraseña incorrectos.' },
-          500: { description: 'Error interno del servidor.' },
-        },
-      },
-    },
-
     '/api/auth/me': {
       get: {
         tags: ['Autenticación'],
@@ -181,6 +181,54 @@ export const swaggerDocument = {
             },
           },
           401: { description: 'Token ausente, inválido o expirado.', },
+          500: { description: 'Error interno del servidor.', },
+        },
+      },
+    },
+
+    '/api/proyectos': {
+      post: {
+        tags: ['Proyectos'],
+        summary: 'Crear un proyecto',
+        description: 'Registra un proyecto del usuario autenticado.',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['nombre'],
+                properties: {
+                  nombre: {
+                    type: 'string',
+                    maxLength: 150,
+                    example: 'Implementación TaskFlow',
+                  },
+                  descripcion: {
+                    type: 'string',
+                    maxLength: 5000,
+                    example: 'Desarrollo del sistema de proyectos.',
+                  },
+                  fecha_inicio: {
+                    type: 'string',
+                    format: 'date',
+                    example: '2026-11-19',
+                  },
+                  fecha_fin: {
+                    type: 'string',
+                    format: 'date',
+                    example: '2026-11-28',
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          201: { description: 'Proyecto creado correctamente.', },
+          400: { description: 'Datos del proyecto inválidos.', },
+          401: { description: 'Autenticación requerida.', },
           500: { description: 'Error interno del servidor.', },
         },
       },
