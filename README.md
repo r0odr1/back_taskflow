@@ -33,6 +33,7 @@ npm run dev
 - `GET /api/docs` - Documentación Swagger.
 - `POST /api/auth/register` - Registra un usuario nuevo.
 - `POST /api/auth/login` - Inicia sesión y genera un JWT.
+- `GET /api/auth/me` - Consulta el perfil del usuario autenticado.
 
 ## Base de datos
 

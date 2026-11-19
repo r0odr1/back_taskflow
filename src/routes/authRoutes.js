@@ -1,13 +1,19 @@
-
 import { Router } from 'express';
-import { register, login } from '../controllers/authController.js';
+import {
+  register,
+  login,
+  getProfile,
+} from '../controllers/authController.js';
+
+import { authenticate } from '../middlewares/authMiddleware.js';
 
 const router = Router();
 
-// Registra una nueva cuenta.
+// Rutas públicas.
 router.post('/register', register);
-
-// Autentica un usuario existente.
 router.post('/login', login);
+
+// Ruta protegida mediante JWT.
+router.get('/me', authenticate, getProfile);
 
 export default router;

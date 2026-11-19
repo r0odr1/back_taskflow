@@ -27,6 +27,18 @@ export const swaggerDocument = {
     },
   ],
 
+  // Configura la autenticación JWT para las rutas protegidas en Swagger.
+  components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'Token JWT obtenido al iniciar sesión.',
+      },
+    },
+  },
+
   // Definición de los endpoints disponibles.
   paths: {
     '/api/health': {
@@ -138,6 +150,38 @@ export const swaggerDocument = {
           400: { description: 'Credenciales inválidas.' },
           401: { description: 'Correo o contraseña incorrectos.' },
           500: { description: 'Error interno del servidor.' },
+        },
+      },
+    },
+
+    '/api/auth/me': {
+      get: {
+        tags: ['Autenticación'],
+        summary: 'Consultar perfil autenticado',
+        description: 'Devuelve los datos del usuario identificado por el JWT.',
+        security: [
+          { bearerAuth: [] },
+        ],
+        responses: {
+          200: {
+            description: 'Perfil obtenido correctamente.',
+            content: {
+              'application/json': {
+                example: {
+                  success: true,
+                  message: 'Perfil obtenido correctamente.',
+                  data: {
+                    id: 1,
+                    nombre: 'Usuario Prueba',
+                    email: 'usuario@taskflow.com',
+                    rol: 'USER',
+                  },
+                },
+              },
+            },
+          },
+          401: { description: 'Token ausente, inválido o expirado.', },
+          500: { description: 'Error interno del servidor.', },
         },
       },
     },

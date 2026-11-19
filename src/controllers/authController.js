@@ -125,3 +125,16 @@ export const login = async (req, res) => {
     });
   }
 };
+
+/**
+ * Devuelve el perfil del usuario autenticado.
+ *
+ * @route GET /api/auth/me
+ */
+export const getProfile = (req, res) => {
+  return res.status(200).json({
+    success: true,
+    message: 'Perfil obtenido correctamente.',
+    data: req.user,
+  });
+};
