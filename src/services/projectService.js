@@ -55,3 +55,45 @@ export const createProject = async (data) => {
     client.release();
   }
 };
+
+
+/**
+ * Consulta los proyectos asociados a un usuario.
+ *
+ * @param {number} userId - ID del usuario autenticado.
+ * @returns {Promise<object[]>} Proyectos accesibles.
+ */
+export const getUserProjects = async (userId) => {
+  const query = `
+    SELECT
+      p.id,
+      p.nombre,
+      p.descripcion,
+      p.fecha_inicio,
+      p.fecha_fin,
+      p.propietario_id,
+      p.created_at,
+      u.nombre AS propietario,
+      EXISTS (
+        SELECT 1
+        FROM miembros_proyecto mp
+        WHERE mp.proyecto_id = p.id
+          AND mp.usuario_id = $1
+      ) AS es_miembro
+    FROM proyectos p
+    INNER JOIN usuarios u
+      ON u.id = p.propietario_id
+    WHERE p.propietario_id = $1
+       OR EXISTS (
+         SELECT 1
+         FROM miembros_proyecto mp
+         WHERE mp.proyecto_id = p.id
+           AND mp.usuario_id = $1
+       )
+    ORDER BY p.created_at DESC, p.id DESC
+  `;
+
+  const result = await pool.query(query, [userId]);
+
+  return result.rows;
+};

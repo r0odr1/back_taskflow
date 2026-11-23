@@ -232,6 +232,66 @@ export const swaggerDocument = {
           500: { description: 'Error interno del servidor.', },
         },
       },
+
+      get: {
+        tags: ['Proyectos'],
+        summary: 'Listar proyectos del usuario',
+        description: 'Consulta proyectos donde el usuario es propietario o miembro.',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: {
+            description: 'Proyectos obtenidos correctamente.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: {
+                      type: 'boolean',
+                      example: true,
+                    },
+                    message: {
+                      type: 'string',
+                      example: 'Proyectos obtenidos correctamente.',
+                    },
+                    data: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'integer', example: 1 },
+                          nombre: {
+                            type: 'string',
+                            example: 'Implementación TaskFlow',
+                          },
+                          descripcion: {
+                            type: 'string',
+                            nullable: true,
+                          },
+                          propietario_id: {
+                            type: 'integer',
+                            example: 1,
+                          },
+                          propietario: {
+                            type: 'string',
+                            example: 'Usuario Prueba',
+                          },
+                          es_miembro: {
+                            type: 'boolean',
+                            example: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          401: { description: 'Token ausente, inválido o expirado.', },
+          500: { description: 'Error interno del servidor.', },
+        },
+      },
     },
   },
 };

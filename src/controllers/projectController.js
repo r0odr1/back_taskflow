@@ -1,5 +1,5 @@
 
-import { createProject } from '../services/projectService.js';
+import { createProject, getUserProjects } from '../services/projectService.js';
 
 /**
  * Valida y registra un proyecto del usuario autenticado.
@@ -74,6 +74,30 @@ export const storeProject = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'No se pudo crear el proyecto.',
+    });
+  }
+};
+
+/**
+ * Lista los proyectos accesibles para el usuario.
+ *
+ * @route GET /api/proyectos
+ */
+export const listProjects = async (req, res) => {
+  try {
+    const projects = await getUserProjects(req.user.id);
+
+    return res.status(200).json({
+      success: true,
+      message: 'Proyectos obtenidos correctamente.',
+      data: projects,
+    });
+  } catch (error) {
+    console.error('Error al consultar proyectos:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'No se pudieron consultar los proyectos.',
     });
   }
 };
