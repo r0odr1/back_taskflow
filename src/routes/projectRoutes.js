@@ -2,7 +2,7 @@
 import { Router } from 'express';
 
 import { authenticate } from '../middlewares/authMiddleware.js';
-import { storeProject, listProjects } from '../controllers/projectController.js';
+import { storeProject, listProjects, showProject } from '../controllers/projectController.js';
 
 const router = Router();
 
@@ -14,5 +14,8 @@ router.post('/', storeProject);
 
 // Lista los proyectos del usuario autenticado.
 router.get('/', listProjects);
+
+// Consulta un proyecto por ID.
+router.get('/:id', showProject);
 
 export default router;

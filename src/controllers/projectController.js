@@ -1,5 +1,4 @@
-
-import { createProject, getUserProjects } from '../services/projectService.js';
+import { createProject, getUserProjects, getProjectById } from '../services/projectService.js';
 
 /**
  * Valida y registra un proyecto del usuario autenticado.
@@ -98,6 +97,49 @@ export const listProjects = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'No se pudieron consultar los proyectos.',
+    });
+  }
+};
+
+/**
+ * Consulta un proyecto accesible para el usuario.
+ *
+ * @route GET /api/proyectos/:id
+ */
+export const showProject = async (req, res) => {
+  try {
+    const projectId = Number(req.params.id);
+
+    if (!Number.isSafeInteger(projectId) || projectId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'El ID del proyecto no es válido.',
+      });
+    }
+
+    const project = await getProjectById(
+      projectId,
+      req.user.id
+    );
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: 'Proyecto no encontrado.',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Proyecto obtenido correctamente.',
+      data: project,
+    });
+  } catch (error) {
+    console.error('Error al consultar proyecto:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'No se pudo consultar el proyecto.',
     });
   }
 };

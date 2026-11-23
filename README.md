@@ -36,6 +36,7 @@ npm run dev
 - `GET /api/auth/me` - Consulta el perfil del usuario autenticado.
 - `POST /api/proyectos` - Crea proyectos del usuario autenticado.
 - `GET /api/proyectos` - Lista los proyectos accesibles del usuario.
+- `GET /api/proyectos/:id` - Consulta un proyecto accesible por ID.
 
 ## Base de datos
 

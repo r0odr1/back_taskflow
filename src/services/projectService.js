@@ -97,3 +97,45 @@ export const getUserProjects = async (userId) => {
 
   return result.rows;
 };
+
+/**
+ * Obtiene un proyecto si el usuario tiene acceso.
+ *
+ * @param {number} projectId - ID del proyecto.
+ * @param {number} userId - ID del usuario autenticado.
+ * @returns {Promise<object|null>} Proyecto encontrado o null.
+ */
+export const getProjectById = async (projectId, userId) => {
+  const query = `
+    SELECT
+      p.id,
+      p.nombre,
+      p.descripcion,
+      p.fecha_inicio,
+      p.fecha_fin,
+      p.propietario_id,
+      p.created_at,
+      u.nombre AS propietario,
+      (p.propietario_id = $2) AS es_propietario
+    FROM proyectos p
+    INNER JOIN usuarios u
+      ON u.id = p.propietario_id
+    WHERE p.id = $1
+      AND (
+        p.propietario_id = $2
+        OR EXISTS (
+          SELECT 1
+          FROM miembros_proyecto mp
+          WHERE mp.proyecto_id = p.id
+            AND mp.usuario_id = $2
+        )
+      )
+  `;
+
+  const result = await pool.query(query, [
+    projectId,
+    userId,
+  ]);
+
+  return result.rows[0] ?? null;
+};

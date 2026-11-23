@@ -293,5 +293,35 @@ export const swaggerDocument = {
         },
       },
     },
+
+    '/api/proyectos/{id}': {
+      get: {
+        tags: ['Proyectos'],
+        summary: 'Consultar proyecto por ID',
+        description:
+          'Devuelve un proyecto si el usuario es propietario o miembro.',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            description: 'Identificador del proyecto.',
+            schema: {
+              type: 'integer',
+              minimum: 1,
+              example: 1,
+            },
+          },
+        ],
+        responses: {
+          200: {description: 'Proyecto obtenido correctamente.', },
+          400: {description: 'ID del proyecto inválido.', },
+          401: {description: 'Autenticación requerida.', },
+          404: {description: 'Proyecto inexistente o sin acceso.', },
+          500: {description: 'Error interno del servidor.', },
+        },
+      },
+    },
   },
 };
