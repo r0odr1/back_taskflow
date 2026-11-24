@@ -97,3 +97,39 @@ export const getUserTasks = async (userId, projectId = null) => {
 
   return result.rows;
 };
+
+/**
+ * Consulta una tarea si el usuario tiene acceso al proyecto.
+ *
+ * @param {number} taskId
+ * @param {number} userId
+ * @returns {Promise<object|null>}
+ */
+export const getTaskById = async (taskId, userId) => {
+  const query = `
+    SELECT
+      t.*,
+      p.nombre AS proyecto,
+      u.nombre AS asignado
+    FROM tareas t
+    INNER JOIN proyectos p ON p.id = t.proyecto_id
+    LEFT JOIN usuarios u ON u.id = t.asignado_id
+    WHERE t.id = $1
+      AND (
+        p.propietario_id = $2
+        OR EXISTS (
+          SELECT 1
+          FROM miembros_proyecto mp
+          WHERE mp.proyecto_id = p.id
+            AND mp.usuario_id = $2
+        )
+      )
+  `;
+
+  const result = await pool.query(query, [
+    taskId,
+    userId,
+  ]);
+
+  return result.rows[0] ?? null;
+};

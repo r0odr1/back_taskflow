@@ -44,6 +44,7 @@ npm run dev
 
 - `POST /api/tareas` - Crea tareas dentro de proyectos propios.
 - `GET /api/tareas` - Lista tareas accesibles y permite filtrarlas por proyecto.
+- `GET /api/tareas/:id` - Consulta una tarea accesible.
 
 ## Base de datos
 

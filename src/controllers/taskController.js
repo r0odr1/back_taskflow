@@ -1,4 +1,4 @@
-import { createTask, getUserTasks } from '../services/taskService.js';
+import { createTask, getUserTasks, getTaskById } from '../services/taskService.js';
 import { validateTask } from '../utils/taskValidation.js';
 
 /**
@@ -75,6 +75,46 @@ export const listTasks = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'No se pudieron consultar las tareas.',
+    });
+  }
+};
+
+/**
+ * Consulta una tarea mediante su identificador.
+ *
+ * @route GET /api/tareas/:id
+ */
+export const showTask = async (req, res) => {
+  try {
+    const taskId = Number(req.params.id);
+
+    if (!Number.isSafeInteger(taskId) || taskId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'El ID de la tarea no es válido.',
+      });
+    }
+
+    const task = await getTaskById(taskId, req.user.id);
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: 'Tarea no encontrada.',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Tarea obtenida correctamente.',
+      data: task,
+    });
+  } catch (error) {
+    console.error('Error al consultar tarea:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'No se pudo consultar la tarea.',
     });
   }
 };
