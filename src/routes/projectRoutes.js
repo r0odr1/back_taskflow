@@ -2,7 +2,7 @@
 import { Router } from 'express';
 
 import { authenticate } from '../middlewares/authMiddleware.js';
-import { storeProject, listProjects, showProject } from '../controllers/projectController.js';
+import { storeProject, listProjects, showProject, editProject } from '../controllers/projectController.js';
 
 const router = Router();
 
@@ -17,5 +17,8 @@ router.get('/', listProjects);
 
 // Consulta un proyecto por ID.
 router.get('/:id', showProject);
+
+// Actualiza un proyecto del propietario autenticado.
+router.put('/:id', editProject);
 
 export default router;

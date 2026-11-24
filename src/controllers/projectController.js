@@ -1,4 +1,4 @@
-import { createProject, getUserProjects, getProjectById } from '../services/projectService.js';
+import { createProject, getUserProjects, getProjectById, updateProject } from '../services/projectService.js';
 
 /**
  * Valida y registra un proyecto del usuario autenticado.
@@ -140,6 +140,95 @@ export const showProject = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'No se pudo consultar el proyecto.',
+    });
+  }
+};
+
+/**
+ * Valida y actualiza un proyecto del propietario.
+ *
+ * @route PUT /api/proyectos/:id
+ */
+export const editProject = async (req, res) => {
+  try {
+    const projectId = Number(req.params.id);
+    const { nombre, descripcion, fecha_inicio, fecha_fin } = req.body ?? {};
+
+    if (!Number.isSafeInteger(projectId) || projectId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'El ID del proyecto no es válido.',
+      });
+    }
+
+    if (typeof nombre !== 'string' || !nombre.trim() || nombre.trim().length > 150) {
+      return res.status(400).json({
+        success: false,
+        message: 'El nombre del proyecto no es válido.',
+      });
+    }
+
+    if (descripcion != null &&
+        (typeof descripcion !== 'string' || descripcion.length > 5000)) {
+      return res.status(400).json({
+        success: false,
+        message: 'La descripción no es válida.',
+      });
+    }
+
+    // Comprueba el formato y la existencia de cada fecha.
+    const validDate = (value) => {
+      if (value == null || value === '') return true;
+
+      if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        return false;
+      }
+
+      const date = new Date(`${value}T00:00:00Z`);
+
+      return !Number.isNaN(date.getTime()) &&
+        date.toISOString().slice(0, 10) === value;
+    };
+
+    if (!validDate(fecha_inicio) || !validDate(fecha_fin)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Las fechas deben ser válidas y tener formato YYYY-MM-DD.',
+      });
+    }
+
+    if (fecha_inicio && fecha_fin && fecha_fin < fecha_inicio) {
+      return res.status(400).json({
+        success: false,
+        message: 'La fecha final no puede ser anterior a la inicial.',
+      });
+    }
+
+    const project = await updateProject(projectId, req.user.id, {
+      nombre: nombre.trim(),
+      descripcion: descripcion?.trim() || null,
+      fecha_inicio: fecha_inicio || null,
+      fecha_fin: fecha_fin || null,
+    });
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: 'Proyecto no encontrado.',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Proyecto actualizado correctamente.',
+      data: project,
+    });
+  } catch (error) {
+    console.error('Error al actualizar proyecto:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'No se pudo actualizar el proyecto.',
     });
   }
 };

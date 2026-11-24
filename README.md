@@ -37,6 +37,7 @@ npm run dev
 - `POST /api/proyectos` - Crea proyectos del usuario autenticado.
 - `GET /api/proyectos` - Lista los proyectos accesibles del usuario.
 - `GET /api/proyectos/:id` - Consulta un proyecto accesible por ID.
+- `PUT /api/proyectos/:id` - Actualiza un proyecto de su propietario.
 
 ## Base de datos
 

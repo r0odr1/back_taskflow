@@ -322,6 +322,67 @@ export const swaggerDocument = {
           500: {description: 'Error interno del servidor.', },
         },
       },
+
+      put: {
+        tags: ['Proyectos'],
+        summary: 'Actualizar proyecto',
+        description: 'Solo el propietario puede modificar el proyecto.',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: {
+              type: 'integer',
+              minimum: 1,
+            },
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['nombre'],
+                properties: {
+                  nombre: {
+                    type: 'string',
+                    maxLength: 150,
+                    example: 'TaskFlow actualizado',
+                  },
+                  descripcion: {
+                    type: 'string',
+                    maxLength: 5000,
+                    nullable: true,
+                    example: 'Gestión empresarial de proyectos.',
+                  },
+                  fecha_inicio: {
+                    type: 'string',
+                    format: 'date',
+                    nullable: true,
+                    example: '2026-11-23',
+                  },
+                  fecha_fin: {
+                    type: 'string',
+                    format: 'date',
+                    nullable: true,
+                    example: '2026-11-28',
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Proyecto actualizado correctamente.' },
+          400: { description: 'Datos o ID inválidos.' },
+          401: { description: 'Autenticación requerida.' },
+          404: { description: 'Proyecto inexistente o sin permiso.' },
+          500: { description: 'Error interno del servidor.' },
+        },
+      },
     },
   },
 };

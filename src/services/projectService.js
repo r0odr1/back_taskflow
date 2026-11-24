@@ -139,3 +139,37 @@ export const getProjectById = async (projectId, userId) => {
 
   return result.rows[0] ?? null;
 };
+
+/**
+ * Actualiza un proyecto si el usuario es su propietario.
+ *
+ * @param {number} projectId - ID del proyecto.
+ * @param {number} userId - ID del propietario.
+ * @param {object} data - Datos actualizados.
+ * @returns {Promise<object|null>}
+ */
+export const updateProject = async (projectId, userId, data) => {
+  const { nombre, descripcion, fecha_inicio, fecha_fin } = data;
+
+  const query = `
+    UPDATE proyectos
+    SET nombre = $1,
+        descripcion = $2,
+        fecha_inicio = $3,
+        fecha_fin = $4
+    WHERE id = $5
+      AND propietario_id = $6
+    RETURNING *
+  `;
+
+  const result = await pool.query(query, [
+    nombre,
+    descripcion,
+    fecha_inicio,
+    fecha_fin,
+    projectId,
+    userId,
+  ]);
+
+  return result.rows[0] ?? null;
+};
