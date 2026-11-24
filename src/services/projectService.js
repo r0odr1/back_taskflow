@@ -173,3 +173,26 @@ export const updateProject = async (projectId, userId, data) => {
 
   return result.rows[0] ?? null;
 };
+
+/**
+ * Elimina un proyecto si pertenece al usuario.
+ *
+ * @param {number} projectId - ID del proyecto.
+ * @param {number} userId - ID del propietario.
+ * @returns {Promise<object|null>} Proyecto eliminado o null.
+ */
+export const deleteProject = async (projectId, userId) => {
+  const query = `
+    DELETE FROM proyectos
+    WHERE id = $1
+      AND propietario_id = $2
+    RETURNING id, nombre
+  `;
+
+  const result = await pool.query(query, [
+    projectId,
+    userId,
+  ]);
+
+  return result.rows[0] ?? null;
+};

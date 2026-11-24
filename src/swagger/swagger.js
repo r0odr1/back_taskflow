@@ -383,6 +383,47 @@ export const swaggerDocument = {
           500: { description: 'Error interno del servidor.' },
         },
       },
+
+      delete: {
+        tags: ['Proyectos'],
+        summary: 'Eliminar proyecto',
+        description: 'Elimina un proyecto y sus datos asociados. Solo el propietario puede hacerlo.',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            description: 'Identificador del proyecto.',
+            schema: {
+              type: 'integer',
+              minimum: 1,
+              example: 1,
+            },
+          },
+        ],
+        responses: {
+          200: {
+            description: 'Proyecto eliminado correctamente.',
+            content: {
+              'application/json': {
+                example: {
+                  success: true,
+                  message: 'Proyecto eliminado correctamente.',
+                  data: {
+                    id: 1,
+                    nombre: 'Proyecto de prueba',
+                  },
+                },
+              },
+            },
+          },
+          400: {description: 'ID del proyecto inválido.', },
+          401: {description: 'Autenticación requerida.', },
+          404: {description: 'Proyecto inexistente o sin permiso.', },
+          500: {description: 'Error interno del servidor.', },
+        },
+      },
     },
   },
 };

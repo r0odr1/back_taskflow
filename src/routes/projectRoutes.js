@@ -1,8 +1,7 @@
-
 import { Router } from 'express';
 
 import { authenticate } from '../middlewares/authMiddleware.js';
-import { storeProject, listProjects, showProject, editProject } from '../controllers/projectController.js';
+import { storeProject, listProjects, showProject, editProject, removeProject } from '../controllers/projectController.js';
 
 const router = Router();
 
@@ -20,5 +19,8 @@ router.get('/:id', showProject);
 
 // Actualiza un proyecto del propietario autenticado.
 router.put('/:id', editProject);
+
+// Elimina un proyecto del propietario autenticado.
+router.delete('/:id', removeProject);
 
 export default router;

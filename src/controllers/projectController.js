@@ -1,4 +1,4 @@
-import { createProject, getUserProjects, getProjectById, updateProject } from '../services/projectService.js';
+import { createProject, getUserProjects, getProjectById, updateProject, deleteProject } from '../services/projectService.js';
 
 /**
  * Valida y registra un proyecto del usuario autenticado.
@@ -229,6 +229,49 @@ export const editProject = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'No se pudo actualizar el proyecto.',
+    });
+  }
+};
+
+/**
+ * Elimina un proyecto del usuario autenticado.
+ *
+ * @route DELETE /api/proyectos/:id
+ */
+export const removeProject = async (req, res) => {
+  try {
+    const projectId = Number(req.params.id);
+
+    if (!Number.isSafeInteger(projectId) || projectId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'El ID del proyecto no es válido.',
+      });
+    }
+
+    const project = await deleteProject(
+      projectId,
+      req.user.id
+    );
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: 'Proyecto no encontrado.',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Proyecto eliminado correctamente.',
+      data: project,
+    });
+  } catch (error) {
+    console.error('Error al eliminar proyecto:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'No se pudo eliminar el proyecto.',
     });
   }
 };

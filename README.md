@@ -38,6 +38,7 @@ npm run dev
 - `GET /api/proyectos` - Lista los proyectos accesibles del usuario.
 - `GET /api/proyectos/:id` - Consulta un proyecto accesible por ID.
 - `PUT /api/proyectos/:id` - Actualiza un proyecto de su propietario.
+- `DELETE /api/proyectos/:id` - Elimina proyectos del propietario y sus datos asociados.
 
 ## Base de datos
 
