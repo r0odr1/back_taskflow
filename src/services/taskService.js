@@ -60,3 +60,40 @@ export const createTask = async (data, userId) => {
 
   return result.rows[0] ?? null;
 };
+
+/**
+ * Lista tareas de los proyectos accesibles al usuario.
+ *
+ * @param {number} userId
+ * @param {number|null} projectId
+ * @returns {Promise<object[]>}
+ */
+export const getUserTasks = async (userId, projectId = null) => {
+  const query = `
+    SELECT
+      t.*,
+      p.nombre AS proyecto,
+      u.nombre AS asignado
+    FROM tareas t
+    INNER JOIN proyectos p ON p.id = t.proyecto_id
+    LEFT JOIN usuarios u ON u.id = t.asignado_id
+    WHERE (
+      p.propietario_id = $1
+      OR EXISTS (
+        SELECT 1
+        FROM miembros_proyecto mp
+        WHERE mp.proyecto_id = p.id
+          AND mp.usuario_id = $1
+      )
+    )
+    AND ($2::integer IS NULL OR t.proyecto_id = $2)
+    ORDER BY t.created_at DESC, t.id DESC
+  `;
+
+  const result = await pool.query(query, [
+    userId,
+    projectId,
+  ]);
+
+  return result.rows;
+};

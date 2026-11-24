@@ -43,6 +43,7 @@ npm run dev
 - `DELETE /api/proyectos/:id` - Elimina proyectos del propietario y sus datos asociados.
 
 - `POST /api/tareas` - Crea tareas dentro de proyectos propios.
+- `GET /api/tareas` - Lista tareas accesibles y permite filtrarlas por proyecto.
 
 ## Base de datos
 

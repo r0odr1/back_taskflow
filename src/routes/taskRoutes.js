@@ -2,7 +2,7 @@
 import { Router } from 'express';
 
 import { authenticate } from '../middlewares/authMiddleware.js';
-import { storeTask } from '../controllers/taskController.js';
+import { storeTask, listTasks } from '../controllers/taskController.js';
 
 const router = Router();
 
@@ -11,5 +11,8 @@ router.use(authenticate);
 
 // Registra una tarea.
 router.post('/', storeTask);
+
+// Lista las tareas de los proyectos accesibles.
+router.get('/', listTasks);
 
 export default router;

@@ -476,7 +476,7 @@ export const swaggerDocument = {
         },
       },
     },
-    
+
     '/api/tareas': {
       post: {
         tags: ['Tareas'],
@@ -499,6 +499,30 @@ export const swaggerDocument = {
           401: { description: 'Autenticación requerida.' },
           404: { description: 'Proyecto o asignación no disponible.' },
           500: { description: 'Error interno.' },
+        },
+      },
+
+      get: {
+        tags: ['Tareas'],
+        summary: 'Listar tareas accesibles',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'proyecto_id',
+            in: 'query',
+            required: false,
+            description: 'Filtra por proyecto.',
+            schema: {
+              type: 'integer',
+              minimum: 1,
+            },
+          },
+        ],
+        responses: {
+          200: { description: 'Tareas obtenidas correctamente.', },
+          400: { description: 'Filtro inválido.', },
+          401: { description: 'Autenticación requerida.', },
+          500: { description: 'Error interno.', },
         },
       },
     },
