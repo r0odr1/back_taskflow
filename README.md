@@ -46,6 +46,7 @@ npm run dev
 - `GET /api/tareas` - Lista tareas accesibles y permite filtrarlas por proyecto.
 - `GET /api/tareas/:id` - Consulta una tarea accesible.
 - `PUT /api/tareas/:id` - Actualiza tareas de proyectos propios.
+- `DELETE /api/tareas/:id` - Elimina tareas de proyectos propios.
 
 ## Base de datos
 

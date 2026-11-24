@@ -189,3 +189,28 @@ export const updateTask = async (taskId, userId, data) => {
 
   return result.rows[0] ?? null;
 };
+
+/**
+ * Elimina una tarea si el usuario administra su proyecto.
+ *
+ * @param {number} taskId
+ * @param {number} userId
+ * @returns {Promise<object|null>}
+ */
+export const deleteTask = async (taskId, userId) => {
+  const query = `
+    DELETE FROM tareas t
+    USING proyectos p
+    WHERE t.id = $1
+      AND t.proyecto_id = p.id
+      AND p.propietario_id = $2
+    RETURNING t.id, t.titulo
+  `;
+
+  const result = await pool.query(query, [
+    taskId,
+    userId,
+  ]);
+
+  return result.rows[0] ?? null;
+};

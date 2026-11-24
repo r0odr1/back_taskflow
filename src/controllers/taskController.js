@@ -1,4 +1,4 @@
-import { createTask, getUserTasks, getTaskById, updateTask } from '../services/taskService.js';
+import { createTask, getUserTasks, getTaskById, updateTask, deleteTask } from '../services/taskService.js';
 import { validateTask } from '../utils/taskValidation.js';
 
 /**
@@ -168,6 +168,49 @@ export const editTask = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'No se pudo actualizar la tarea.',
+    });
+  }
+};
+
+/**
+ * Elimina una tarea de un proyecto propio.
+ *
+ * @route DELETE /api/tareas/:id
+ */
+export const removeTask = async (req, res) => {
+  try {
+    const taskId = Number(req.params.id);
+
+    if (!Number.isSafeInteger(taskId) || taskId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'El ID de la tarea no es válido.',
+      });
+    }
+
+    const task = await deleteTask(
+      taskId,
+      req.user.id
+    );
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: 'Tarea no encontrada.',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Tarea eliminada correctamente.',
+      data: task,
+    });
+  } catch (error) {
+    console.error('Error al eliminar tarea:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'No se pudo eliminar la tarea.',
     });
   }
 };

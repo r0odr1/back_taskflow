@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { authenticate } from '../middlewares/authMiddleware.js';
-import { storeTask, listTasks, showTask, editTask } from '../controllers/taskController.js';
+import { storeTask, listTasks, showTask, editTask, removeTask } from '../controllers/taskController.js';
 
 const router = Router();
 
@@ -19,5 +19,8 @@ router.get('/:id', showTask);
 
 // Actualiza los datos de una tarea.
 router.put('/:id', editTask);
+
+// Elimina una tarea de un proyecto propio.
+router.delete('/:id', removeTask);
 
 export default router;

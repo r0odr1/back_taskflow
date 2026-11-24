@@ -625,6 +625,31 @@ export const swaggerDocument = {
           500: { description: 'Error interno.' },
         },
       },
+
+      delete: {
+        tags: ['Tareas'],
+        summary: 'Eliminar tarea',
+        description: 'Solo el propietario del proyecto puede eliminarla.',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: {
+              type: 'integer',
+              minimum: 1,
+            },
+          },
+        ],
+        responses: {
+          200: { description: 'Tarea eliminada correctamente.' },
+          400: { description: 'ID inválido.' },
+          401: { description: 'Autenticación requerida.' },
+          404: { description: 'Tarea inexistente o sin acceso.' },
+          500: { description: 'Error interno.' },
+        },
+      },
     },
   },
 };
