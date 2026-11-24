@@ -1,4 +1,4 @@
-import { createTask, getUserTasks, getTaskById } from '../services/taskService.js';
+import { createTask, getUserTasks, getTaskById, updateTask } from '../services/taskService.js';
 import { validateTask } from '../utils/taskValidation.js';
 
 /**
@@ -115,6 +115,59 @@ export const showTask = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'No se pudo consultar la tarea.',
+    });
+  }
+};
+
+/**
+ * Valida y actualiza una tarea del proyecto.
+ *
+ * @route PUT /api/tareas/:id
+ */
+export const editTask = async (req, res) => {
+  try {
+    const taskId = Number(req.params.id);
+
+    if (!Number.isSafeInteger(taskId) || taskId <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'El ID de la tarea no es válido.',
+      });
+    }
+
+    const { data, error } = validateTask(req.body, true);
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error,
+      });
+    }
+
+    const task = await updateTask(
+      taskId,
+      req.user.id,
+      data
+    );
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: 'Tarea no encontrada o asignación no permitida.',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Tarea actualizada correctamente.',
+      data: task,
+    });
+  } catch (error) {
+    console.error('Error al actualizar tarea:', error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'No se pudo actualizar la tarea.',
     });
   }
 };

@@ -133,3 +133,59 @@ export const getTaskById = async (taskId, userId) => {
 
   return result.rows[0] ?? null;
 };
+
+/**
+ * Actualiza una tarea si el usuario administra su proyecto.
+ *
+ * @param {number} taskId
+ * @param {number} userId
+ * @param {object} data
+ * @returns {Promise<object|null>}
+ */
+export const updateTask = async (taskId, userId, data) => {
+  const {
+    titulo,
+    descripcion,
+    estado,
+    prioridad,
+    fecha_limite,
+    asignado_id,
+  } = data;
+
+  const query = `
+    UPDATE tareas t
+    SET titulo = $1,
+        descripcion = $2,
+        estado = $3,
+        prioridad = $4,
+        fecha_limite = $5,
+        asignado_id = $6
+    FROM proyectos p
+    WHERE t.id = $7
+      AND t.proyecto_id = p.id
+      AND p.propietario_id = $8
+      AND (
+        $6::integer IS NULL
+        OR EXISTS (
+          SELECT 1
+          FROM miembros_proyecto mp
+          WHERE mp.proyecto_id = p.id
+            AND mp.usuario_id = $6
+        )
+      )
+    RETURNING t.*
+  `;
+
+  const result = await pool.query(query, [
+    titulo,
+    descripcion,
+    estado,
+    prioridad,
+    fecha_limite,
+    asignado_id,
+    taskId,
+    userId,
+  ]);
+
+  return result.rows[0] ?? null;
+};

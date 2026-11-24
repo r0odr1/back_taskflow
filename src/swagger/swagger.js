@@ -87,6 +87,45 @@ export const swaggerDocument = {
           },
         },
       },
+
+      TareaActualizacion: {
+        type: 'object',
+        required: ['titulo', 'estado', 'prioridad'],
+        properties: {
+          titulo: {
+            type: 'string',
+            maxLength: 150,
+            example: 'Diseñar dashboard',
+          },
+          descripcion: {
+            type: 'string',
+            nullable: true,
+            maxLength: 5000,
+          },
+          estado: {
+            type: 'string',
+            enum: [
+              'PENDIENTE',
+              'EN_PROGRESO',
+              'EN_REVISION',
+              'COMPLETADA',
+            ],
+          },
+          prioridad: {
+            type: 'string',
+            enum: ['BAJA', 'MEDIA', 'ALTA'],
+          },
+          fecha_limite: {
+            type: 'string',
+            format: 'date',
+            nullable: true,
+          },
+          asignado_id: {
+            type: 'integer',
+            nullable: true,
+          },
+        },
+      },
     },
   },
 
@@ -548,6 +587,41 @@ export const swaggerDocument = {
           400: { description: 'ID inválido.' },
           401: { description: 'Autenticación requerida.' },
           404: { description: 'Tarea inexistente o sin acceso.' },
+          500: { description: 'Error interno.' },
+        },
+      },
+
+      put: {
+        tags: ['Tareas'],
+        summary: 'Actualizar tarea',
+        description: 'Solo el propietario del proyecto puede actualizarla.',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: {
+              type: 'integer',
+              minimum: 1,
+            },
+          },
+        ],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/TareaActualizacion',
+              },
+            },
+          },
+        },
+        responses: {
+          200: { description: 'Tarea actualizada correctamente.' },
+          400: { description: 'Datos inválidos.' },
+          401: { description: 'Autenticación requerida.' },
+          404: { description: 'Tarea no disponible o asignación inválida.' },
           500: { description: 'Error interno.' },
         },
       },
