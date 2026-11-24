@@ -30,15 +30,19 @@ npm run dev
 ## Endpoints disponibles
 
 - `GET /api/health` - Estado del servidor y base de datos.
+
 - `GET /api/docs` - Documentación Swagger.
 - `POST /api/auth/register` - Registra un usuario nuevo.
 - `POST /api/auth/login` - Inicia sesión y genera un JWT.
 - `GET /api/auth/me` - Consulta el perfil del usuario autenticado.
+
 - `POST /api/proyectos` - Crea proyectos del usuario autenticado.
 - `GET /api/proyectos` - Lista los proyectos accesibles del usuario.
 - `GET /api/proyectos/:id` - Consulta un proyecto accesible por ID.
 - `PUT /api/proyectos/:id` - Actualiza un proyecto de su propietario.
 - `DELETE /api/proyectos/:id` - Elimina proyectos del propietario y sus datos asociados.
+
+- `POST /api/tareas` - Crea tareas dentro de proyectos propios.
 
 ## Base de datos
 

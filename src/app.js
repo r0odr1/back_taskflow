@@ -7,6 +7,7 @@ import { httpLogger } from './middlewares/httpLogger.js';
 import { swaggerDocument } from './swagger/swagger.js';
 import authRoutes from './routes/authRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
+import taskRoutes from './routes/taskRoutes.js';
 
 //Instancia principal de la aplicación Express.
 const app = express();
@@ -25,6 +26,9 @@ app.use('/api/auth', authRoutes);
 
 // Endpoints protegidos para gestionar proyectos.
 app.use('/api/proyectos', projectRoutes);
+
+// Endpoints protegidos de gestión de tareas.
+app.use('/api/tareas', taskRoutes);
 
 /**
  * GET /api/health

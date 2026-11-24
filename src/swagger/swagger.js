@@ -37,6 +37,57 @@ export const swaggerDocument = {
         description: 'Token JWT obtenido al iniciar sesión.',
       },
     },
+
+    schemas: {
+      TareaEntrada: {
+        type: 'object',
+        required: ['titulo', 'proyecto_id'],
+        properties: {
+          titulo: {
+            type: 'string',
+            maxLength: 150,
+            example: 'Diseñar pantalla de inicio',
+          },
+          descripcion: {
+            type: 'string',
+            maxLength: 5000,
+            nullable: true,
+            example: 'Diseñar el formulario de inicio de sesión.',
+          },
+          proyecto_id: {
+            type: 'integer',
+            minimum: 1,
+            example: 1,
+          },
+          estado: {
+            type: 'string',
+            enum: [
+              'PENDIENTE',
+              'EN_PROGRESO',
+              'EN_REVISION',
+              'COMPLETADA',
+            ],
+            default: 'PENDIENTE',
+          },
+          prioridad: {
+            type: 'string',
+            enum: ['BAJA', 'MEDIA', 'ALTA'],
+            default: 'MEDIA',
+          },
+          fecha_limite: {
+            type: 'string',
+            format: 'date',
+            nullable: true,
+            example: '2026-11-28',
+          },
+          asignado_id: {
+            type: 'integer',
+            nullable: true,
+            example: 1,
+          },
+        },
+      },
+    },
   },
 
   // Definición de los endpoints disponibles.
@@ -422,6 +473,32 @@ export const swaggerDocument = {
           401: {description: 'Autenticación requerida.', },
           404: {description: 'Proyecto inexistente o sin permiso.', },
           500: {description: 'Error interno del servidor.', },
+        },
+      },
+    },
+    
+    '/api/tareas': {
+      post: {
+        tags: ['Tareas'],
+        summary: 'Crear tarea',
+        description: 'El propietario crea una tarea dentro de su proyecto.',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/TareaEntrada',
+              },
+            },
+          },
+        },
+        responses: {
+          201: { description: 'Tarea creada correctamente.' },
+          400: { description: 'Datos inválidos.' },
+          401: { description: 'Autenticación requerida.' },
+          404: { description: 'Proyecto o asignación no disponible.' },
+          500: { description: 'Error interno.' },
         },
       },
     },
