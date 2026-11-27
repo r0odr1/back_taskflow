@@ -58,3 +58,12 @@ e incluye usuarios, proyectos, miembros y tareas.
 La API REST se documenta mediante Swagger.
 
 URL local: http://localhost:4000/api/docs
+
+### Swagger en producción
+
+La documentación Swagger utiliza una URL relativa al servidor actual, por lo que funciona tanto en desarrollo local como en Render.
+
+Producción:
+https://taskflow-api-fyso.onrender.com/api/docs
+
+Las solicitudes ejecutadas desde Swagger se envían al mismo servidor donde está publicada la documentación.

@@ -19,10 +19,11 @@ export const swaggerDocument = {
       'API REST para la gestión de proyectos y tareas empresariales.',
   },
 
-  // Servidor utilizado durante el desarrollo local.
+  // Utiliza el servidor actual para ejecutar las solicitudes.
+  // Funciona tanto en desarrollo como en producción.
   servers: [
     {
-      url: 'http://localhost:4000',
+      url: '/',
       description: 'Servidor de desarrollo',
     },
   ],
